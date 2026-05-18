@@ -223,17 +223,18 @@ def _dashboard(args):
     from knowflow.dashboard import generate
     
     root = Path.cwd()
-    # Look for knowledge dir: cwd, or ~/knowledge, or specified path
     knowledge_dir = root
     auto_detect = True
+    password = None
     
     for i, a in enumerate(args):
         if a == "--dir" and i + 1 < len(args):
             knowledge_dir = Path(args[i + 1])
             auto_detect = False
+        if a == "--password" and i + 1 < len(args):
+            password = args[i + 1]
     
     if auto_detect and not (knowledge_dir / "MANIFEST.yaml").exists():
-        # Try ~/knowledge/
         home_kb = Path.home() / "knowledge"
         if home_kb.exists():
             knowledge_dir = home_kb
@@ -246,8 +247,12 @@ def _dashboard(args):
         if a == "--output" and i + 1 < len(args):
             output = Path(args[i + 1])
     
+    if not password:
+        import getpass
+        password = getpass.getpass("设置仪表盘密码: ")
+    
     try:
-        path = generate(knowledge_dir, output)
+        path = generate(knowledge_dir, output, password=password)
         print(f"   Open: file://{path.absolute()}")
         print(f"   Host with: cd {output} && python3 -m http.server 8080")
     except Exception as e:

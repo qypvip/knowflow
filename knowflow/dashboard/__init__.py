@@ -43,9 +43,10 @@ def _parse_key_value(md_text):
 class DashboardGenerator:
     """Generate a static HTML dashboard from knowledge data."""
 
-    def __init__(self, knowledge_dir, output_dir=None):
+    def __init__(self, knowledge_dir, output_dir=None, password=None):
         self.knowledge_dir = Path(knowledge_dir)
         self.output_dir = Path(output_dir or knowledge_dir / 'dashboard')
+        self.password = password
         self.data = {}
 
     def collect(self):
@@ -174,6 +175,38 @@ class DashboardGenerator:
         total_strats = d['stats']['stock_strategies']
         total_files = d['stats']['total_files']
 
+        # Password protection
+        password_guard = ''
+        if self.password:
+            password_guard = f'''
+<div id="password-overlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#0f1117;z-index:9999;display:flex;align-items:center;justify-content:center;">
+<div style="background:#161b22;border:1px solid #30363d;border-radius:16px;padding:40px;width:90%;max-width:380px;text-align:center;">
+<div style="font-size:3em;margin-bottom:16px;">🔐</div>
+<h2 style="color:#f0f6fc;margin-bottom:8px;">KnowFlow</h2>
+<p style="color:#8b949e;font-size:0.9em;margin-bottom:24px;">请输入密码查看仪表盘</p>
+<input id="pwd-input" type="password" placeholder="密码" style="width:100%;padding:12px 16px;background:#0f1117;border:1px solid #30363d;border-radius:8px;color:#e1e4e8;font-size:1em;outline:none;margin-bottom:12px;box-sizing:border-box;" onkeydown="if(event.key==='Enter')checkPwd()">
+<button onclick="checkPwd()" style="width:100%;padding:12px;background:#238636;border:none;border-radius:8px;color:#fff;font-size:1em;cursor:pointer;font-weight:600;">进入</button>
+<p id="pwd-error" style="color:#f85149;font-size:0.85em;margin-top:12px;display:none;">密码错误，请重试</p>
+</div>
+</div>
+<script>
+var _pwd = {json.dumps(self.password)};
+function checkPwd() {{
+    var v = document.getElementById('pwd-input').value;
+    if (v === _pwd) {{
+        document.getElementById('password-overlay').style.display = 'none';
+        document.getElementById('dashboard-content').style.display = 'block';
+    }} else {{
+        document.getElementById('pwd-error').style.display = 'block';
+    }}
+}}
+document.addEventListener('DOMContentLoaded', function() {{
+    document.getElementById('password-overlay').style.display = 'flex';
+    document.getElementById('dashboard-content').style.display = 'none';
+    document.getElementById('pwd-input').focus();
+}});
+</script>'''
+
         html = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -241,7 +274,8 @@ tr:hover td {{ background: #1c2128; }}
 }}
 </style>
 </head>
-<body>
+{password_guard}
+<div id="dashboard-content">
 <div class="container">
     <div class="header">
         <div>
@@ -298,6 +332,7 @@ tr:hover td {{ background: #1c2128; }}
 KnowFlow &copy; {datetime.now().year} &mdash; Agent Knowledge Pipeline &mdash; 数据自动流动
 </div>
 </div>
+</div>
 </body>
 </html>'''
         return html
@@ -312,9 +347,9 @@ KnowFlow &copy; {datetime.now().year} &mdash; Agent Knowledge Pipeline &mdash; �
         return out_path
 
 
-def generate(knowledge_dir, output_dir=None):
+def generate(knowledge_dir, output_dir=None, password=None):
     """Convenience function to generate a dashboard."""
-    gen = DashboardGenerator(knowledge_dir, output_dir)
+    gen = DashboardGenerator(knowledge_dir, output_dir, password=password)
     path = gen.generate()
     print(f"✅ Dashboard generated: {path}")
     return path
