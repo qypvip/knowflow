@@ -1,0 +1,20 @@
+# 📚 Project Wiki Template
+# KnowFlow template: project-wiki
+# Auto-document project files
+
+name: wiki
+display_name: "📚 项目文档"
+description: 项目文档自动管理
+
+schema:
+  pages:
+    type: directory
+    pattern: "*.json"
+
+exports:
+  pages:
+    source: "pages/*.json"
+
+retention:
+  half_lives:
+    pages: 180

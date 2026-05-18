@@ -1,0 +1,3 @@
+include knowflow/templates/*/plugin.yaml
+include README.md
+include LICENSE

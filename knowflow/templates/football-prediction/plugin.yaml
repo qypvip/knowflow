@@ -1,0 +1,22 @@
+# ⚽ Football Prediction Template
+# KnowFlow template: football-prediction
+# Automates match prediction → tracking → review loop
+
+name: football
+display_name: "⚽ 足球预测"
+description: 比赛预测+自进化复盘闭环
+
+schema:
+  predictions:
+    type: directory
+    pattern: "*.json"
+    description: 每日预测结果
+  learnings.json:
+    type: json_append_only
+    description: 复盘学习记录
+
+exports:
+  predictions:
+    source: "predictions/*.json"
+  learnings:
+    source: "learnings.json"

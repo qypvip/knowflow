@@ -1,0 +1,21 @@
+# 📝 Daily Journal Template
+# KnowFlow template: daily-journal
+# Personal daily notes with automatic archiving
+
+name: journal
+display_name: "📝 每日日记"
+description: 个人日记+自动归档
+
+schema:
+  entries:
+    type: directory
+    pattern: "*.json"
+    description: 每日日记条目
+
+exports:
+  entries:
+    source: "entries/*.json"
+
+retention:
+  half_lives:
+    entries: 365  # 日记保留一年

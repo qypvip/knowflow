@@ -1,0 +1,20 @@
+# 🌐 Web Monitor Template
+# KnowFlow template: web-monitor
+# Archive web pages and track changes
+
+name: monitor
+display_name: "🌐 网页监控"
+description: 网页内容追踪和归档
+
+schema:
+  snapshots:
+    type: directory
+    pattern: "*.json"
+
+exports:
+  snapshots:
+    source: "snapshots/*.json"
+
+retention:
+  half_lives:
+    snapshots: 14  # 网页快照2周后归档

@@ -1,0 +1,18 @@
+# 🏆 World Cup Squad Tracker
+# KnowFlow template: worldcup-tracker
+# Track national team squad announcements
+
+name: worldcup
+display_name: "🏆 世界杯追踪"
+description: 国家队名单和赛程追踪
+
+schema:
+  squads.json:
+    description: 各国球队名单
+  schedule.json:
+    optional: true
+    description: 完整赛程
+
+exports:
+  squads:
+    source: "*.json"

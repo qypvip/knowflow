@@ -1,0 +1,22 @@
+# 📈 Stock Analysis Template
+# KnowFlow template: stock-analysis
+# Multi-strategy A-share analysis → recommendation → review
+
+name: stock
+display_name: "📈 股票分析"
+description: 多策略A股分析+推荐+模拟盘
+
+schema:
+  daily:
+    type: directory
+    pattern: "*/"
+    description: 每日分析数据
+  review.json:
+    type: json_append_only
+    description: 策略权重复盘
+
+exports:
+  daily:
+    source: "daily/*/recommendation.json"
+  review:
+    source: "review.json"

@@ -1,0 +1,26 @@
+# 🔬 Research Notes Template
+# KnowFlow template: research-notes
+# Academic research paper notes
+
+name: research
+display_name: "🔬 研究笔记"
+description: 学术研究笔记管理
+
+schema:
+  papers:
+    type: directory
+    pattern: "*.json"
+  notes:
+    type: directory
+    pattern: "*.json"
+
+exports:
+  papers:
+    source: "papers/*.json"
+  notes:
+    source: "notes/*.json"
+
+retention:
+  half_lives:
+    papers: 365  # 论文长期保留
+    notes: 90
