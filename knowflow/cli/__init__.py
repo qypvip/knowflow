@@ -52,6 +52,9 @@ def main():
         dry_run = "--dry-run" in args
         _archive(dry_run)
     
+    elif cmd == "dashboard":
+        _dashboard(args[1:])
+    
     else:
         print(f"Unknown command: {cmd}")
         print(__doc__.strip())
@@ -213,6 +216,44 @@ def _archive(dry_run: bool = False):
                 print(f"  {plugin_dir}: {result.get('candidates', 0)} files to archive")
             else:
                 print(f"  {plugin_dir}: {result.get('archives', 0)} archives, {result.get('freed_kb', 0)}KB freed")
+
+
+def _dashboard(args):
+    """Generate web dashboard from knowledge data."""
+    from knowflow.dashboard import generate
+    
+    root = Path.cwd()
+    # Look for knowledge dir: cwd, or ~/knowledge, or specified path
+    knowledge_dir = root
+    auto_detect = True
+    
+    for i, a in enumerate(args):
+        if a == "--dir" and i + 1 < len(args):
+            knowledge_dir = Path(args[i + 1])
+            auto_detect = False
+    
+    if auto_detect and not (knowledge_dir / "MANIFEST.yaml").exists():
+        # Try ~/knowledge/
+        home_kb = Path.home() / "knowledge"
+        if home_kb.exists():
+            knowledge_dir = home_kb
+        else:
+            print("❌ No knowledge directory found. Specify: knowflow dashboard --dir /path/to/knowledge")
+            return
+    
+    output = knowledge_dir / "dashboard"
+    for i, a in enumerate(args):
+        if a == "--output" and i + 1 < len(args):
+            output = Path(args[i + 1])
+    
+    try:
+        path = generate(knowledge_dir, output)
+        print(f"   Open: file://{path.absolute()}")
+        print(f"   Host with: cd {output} && python3 -m http.server 8080")
+    except Exception as e:
+        print(f"❌ Dashboard generation failed: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 if __name__ == "__main__":
