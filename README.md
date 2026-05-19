@@ -124,3 +124,4 @@ KnowledgeAdapter ← 可插拔（Obsidian/Notion/IMA...）
 ## 📄 协议
 
 MIT
+# Gitee Mirror
