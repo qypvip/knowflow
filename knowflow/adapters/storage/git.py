@@ -81,8 +81,13 @@ class GitStorage(StorageAdapter):
         p = self._resolve(path)
         if not p.exists():
             return False
-        p.unlink()
-        self._git("add", str(p.relative_to(self.root)))
+        if p.is_file():
+            p.unlink()
+        else:
+            # 与 LocalStorage 行为一致：目录递归删除
+            import shutil
+            shutil.rmtree(p)
+        self._git("add", "-A")
         return True
     
     def exists(self, path: str) -> bool:

@@ -13,9 +13,10 @@ Built-in adapters:
   - gitbook:  GitBook-style documentation
 
 Usage:
-    from knowflow.adapters.knowledge import create_kb
-    kb = create_kb("obsidian", path="~/my-vault")
-    kb.sync("/source/data", "football-predictions")
+    from knowflow.adapters.knowledge import create_knowledge, create_kb  # create_kb 为别名
+    kb = create_knowledge("obsidian", path="~/my-vault")
+    kb.sync([KnowledgePage(title="周报", content="# 周报\\n…", path="weekly/2026-10-02.md")])
+    kb.search("阅读习惯", limit=5)
 """
 
 from abc import ABC, abstractmethod

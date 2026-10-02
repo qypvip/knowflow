@@ -1,4 +1,6 @@
 """knowflow/adapters/storage/__init__.py — Storage adapter registry"""
+from typing import Optional
+
 from knowflow.core.storage import StorageAdapter
 
 
@@ -11,8 +13,13 @@ def register(name: str, cls):
     _REGISTRY[name.lower()] = cls
 
 
-def create_storage(name: str, **kwargs) -> StorageAdapter:
-    """Factory: create a storage adapter by name"""
+def create_storage(name: str, config: Optional[dict] = None, **kwargs) -> StorageAdapter:
+    """Factory: create a storage adapter by name.
+
+    两种调用方式都支持：
+        create_storage("git", path="~/my-data")          # 扁平参数（文档里的写法）
+        create_storage("git", config={"path": "..."})    # 显式 config 字典
+    """
     name = name.lower()
     if name not in _REGISTRY:
         available = list(_REGISTRY.keys())
@@ -20,7 +27,11 @@ def create_storage(name: str, **kwargs) -> StorageAdapter:
             f"Unknown storage backend: '{name}'. "
             f"Available: {available}"
         )
-    return _REGISTRY[name](**kwargs)
+    if config is None:
+        config = dict(kwargs) if kwargs else None
+    elif kwargs:
+        config = {**config, **kwargs}
+    return _REGISTRY[name](config)
 
 
 def list_backends() -> list[str]:
