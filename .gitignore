@@ -25,3 +25,11 @@ Thumbs.db
 # KnowFlow project data (not the engine itself)
 *.db
 *.sqlite
+
+# ===== 业务层数据：绝不入库 =====
+# 含真人/学生信息的分析产出
+data/
+output/
+# 生成的仪表盘（内嵌明文密码，不能进公开仓库）
+docs/index.html
+**/dashboard/index.html

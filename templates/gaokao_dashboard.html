@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎯 河北高考志愿分析系统</title>
+<style>
+  :root { --bg: #0f172a; --card: #1e293b; --accent: #3b82f6; --text: #e2e8f0; --red: #ef4444; --yellow: #eab308; --green: #22c55e; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 2rem; margin-bottom: 8px; }
+  .sub { color: #94a3b8; margin-bottom: 24px; }
+  .card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card h2 { font-size: 1.2rem; margin-bottom: 12px; color: var(--accent); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stat { text-align: center; padding: 16px; border-radius: 8px; }
+  .stat .num { font-size: 2rem; font-weight: bold; }
+  .stat .label { font-size: 0.85rem; color: #94a3b8; }
+  .chong { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); }
+  .chong .num { color: var(--red); }
+  .wen { background: rgba(234,179,8,0.15); border: 1px solid rgba(234,179,8,0.3); }
+  .wen .num { color: var(--yellow); }
+  .bao { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); }
+  .bao .num { color: var(--green); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #334155; }
+  th { color: #94a3b8; font-weight: normal; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; }
+  .tag-985 { background: #1e40af; color: #93c5fd; }
+  .tag-211 { background: #854d0e; color: #fde68a; }
+  .tag-key { background: #166534; color: #86efac; }
+  .red-score { color: var(--red); font-weight: bold; }
+  .yellow-score { color: var(--yellow); font-weight: bold; }
+  .green-score { color: var(--green); font-weight: bold; }
+  input, button { padding: 10px 16px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: var(--text); font-size: 1rem; }
+  button { background: var(--accent); color: white; cursor: pointer; border: none; }
+  button:hover { background: #2563eb; }
+  .form-row { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .form-row input { flex: 1; min-width: 120px; }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎯 河北高考志愿分析系统</h1>
+  <p class="sub">基于位次法 + 学科评估 + 专业红利分析 · 数据年份：2023-2025</p>
+
+  <div class="card">
+    <h2>📌 快速查询</h2>
+    <div class="form-row">
+      <input type="text" id="score" placeholder="分数（如580）">
+      <input type="text" id="rank" placeholder="位次（如12000）">
+      <input type="text" id="subjects" placeholder="选科（如物化生）" value="物化生">
+      <select id="group" style="padding:10px 16px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#e2e8f0;font-size:1rem;">
+        <option value="物理组">物理组</option>
+        <option value="历史组">历史组</option>
+      </select>
+      <button onclick="query()">分析 →</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 2025年河北省省控线</h2>
+    <table>
+      <tr><th>科类</th><th>特招线</th><th>本科线</th><th>专科线</th></tr>
+      <tr><td>物理组</td><td class="red-score">558</td><td>448</td><td>200</td></tr>
+      <tr><td>历史组</td><td class="red-score">533</td><td>449</td><td>200</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📊 数据热度</h2>
+    <div class="grid">
+      <div class="stat chong"><div class="num">—</div><div class="label">可冲击院校</div></div>
+      <div class="stat wen"><div class="num">—</div><div class="label">较稳妥院校</div></div>
+      <div class="stat bao"><div class="num">—</div><div class="label">可保底院校</div></div>
+      <div class="stat" style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3)">
+        <div class="num" style="color:var(--accent)">38</div>
+        <div class="label">可分析专业</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📚 数据文件</h2>
+    <table>
+      <tr><th>文件</th><th>说明</th><th>规模</th></tr>
+      <tr><td>control_lines.json</td><td>省控线 + 一分一段表</td><td>2023-2025+2026预估</td></tr>
+      <tr><td>national_universities.json</td><td>全国高校河北录取位次</td><td>100+所</td></tr>
+      <tr><td>university_academic.json</td><td>学科评估 + 硕博点 + 保研率</td><td>172所高校</td></tr>
+      <tr><td>major_trends.json</td><td>专业趋势 + 红利评分</td><td>38个专业</td></tr>
+    </table>
+  </div>
+</div>
+<script>
+async function query() {
+  const score = document.getElementById('score').value;
+  const rank = document.getElementById('rank').value;
+  const subjects = document.getElementById('subjects').value;
+  const group = document.getElementById('group').value;
+  if (!score || !rank) { alert('请输入分数和位次'); return; }
+  
+  const res = await fetch('http://localhost:8080/api/gaokao/analyze', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({group, score: parseInt(score), rank: parseInt(rank), subjects, year:'2025'})
+  });
+  if (!res.ok) { alert('引擎未启动，请先在终端运行: python3 tools/gaokao/analyzer.py ...'); return; }
+  const data = await res.json();
+  document.querySelector('.chong .num').textContent = data.matched_universities?.total_冲 || '—';
+  document.querySelector('.wen .num').textContent = data.matched_universities?.total_稳 || '—';
+  document.querySelector('.bao .num').textContent = data.matched_universities?.total_保 || '—';
+  alert('✅ 分析完成！请在QQ中直接向我询问分数和位次获取报告');
+}
+</script>
+</body>
+</html>
