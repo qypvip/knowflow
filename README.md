@@ -5,10 +5,12 @@
 让 AI Agent 产出的数据自动走完：**写入 → 版本控制 → 多端同步 → 人类可读** 的全流程。
 
 ![CI](https://github.com/qypvip/knowflow/actions/workflows/ci.yml/badge.svg)
+[![PyPI](https://img.shields.io/pypi/v/knowflow.svg)](https://pypi.org/project/knowflow/)
+[![Python](https://img.shields.io/pypi/pyversions/knowflow.svg)](https://pypi.org/project/knowflow/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ```bash
-# ⚠️ 尚未发布到 PyPI，请从源码安装（见下方"安装"）
-git clone https://github.com/qypvip/knowflow.git && cd knowflow && pip install -e .
+pip install knowflow
 
 # 从模板创建新项目
 knowflow init football-prediction --dir my-football-bot
@@ -21,6 +23,19 @@ knowflow run
 # 查看报告
 cat output/football/prediction.md
 ```
+
+## 🤔 这解决什么问题
+
+如果你用 AI Agent 干活，大概率遇到过这三件事：
+
+1. **数据散落** —— Agent 每跑一次就吐几个 JSON，几十次之后你根本找不到“上周三那次分析结果在哪”。
+2. **机器看得懂，人看不懂** —— JSON 一行行挤在一起，想回顾得自己拼。
+3. **越用越乱** —— 数据只增不减，几个月后目录里几千个文件，不敢删也不知道删哪个。
+
+KnowFlow 干的就是这三件：**Agent 只管往固定目录写 JSON，剩下的（转成人类可读的 Markdown、
+自动分热/温/冷三层归档、生成索引、Git 记录每次变更）全交给它。**
+
+一句话：**Agent 负责产出，KnowFlow 负责让它留下来还有用。**
 
 ## ✨ 特性
 
@@ -38,15 +53,20 @@ cat output/football/prediction.md
 
 ## 🚀 安装
 
-尚未发布到 PyPI，从源码安装：
+```bash
+pip install knowflow
+
+# 可选后端
+pip install "knowflow[s3]"       # S3 / MinIO / R2
+pip install "knowflow[all]"      # 全部后端
+```
+
+从源码安装（开发用）：
 
 ```bash
 git clone https://github.com/qypvip/knowflow.git
 cd knowflow
 pip install -e .
-
-# 可选后端
-pip install -e ".[s3]"       # S3 / MinIO / R2
 ```
 
 国内网络拉不动 GitHub 时，可用镜像前缀：

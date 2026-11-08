@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "knowflow"
+version = "0.1.0"
+description = "Agent Knowledge Pipeline — storage-agnostic, KB-agnostic, plug-and-play pipeline that turns raw agent JSON into versioned, human-readable docs"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "qypvip", email = "yanpeng898@gmail.com" }]
+keywords = [
+    "agent", "ai-agent", "knowledge-base", "pipeline", "llm",
+    "markdown", "obsidian", "automation", "data-pipeline", "etl",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Typing :: Typed",
+]
+dependencies = ["pyyaml>=5.1"]
+
+[project.optional-dependencies]
+s3 = ["boto3"]
+notion = ["notion-client"]
+ima = ["requests"]
+webdav = ["requests"]
+all = ["boto3", "notion-client", "requests"]
+
+[project.scripts]
+knowflow = "knowflow.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/qypvip/knowflow"
+Repository = "https://github.com/qypvip/knowflow"
+Issues = "https://github.com/qypvip/knowflow/issues"
+Changelog = "https://github.com/qypvip/knowflow/commits/main"
+
+[tool.setuptools.packages.find]
+include = ["knowflow*"]
+
+[tool.setuptools.package-data]
+knowflow = ["templates/*/plugin.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

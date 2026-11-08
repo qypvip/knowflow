@@ -33,3 +33,8 @@ output/
 # 生成的仪表盘（内嵌明文密码，不能进公开仓库）
 docs/index.html
 **/dashboard/index.html
+
+# build artifacts
+dist/
+build/
+*.egg-info/
